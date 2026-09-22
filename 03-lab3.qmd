@@ -1,0 +1,43 @@
+---
+title: "03-lab3"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Assignment question 1.
+
+```{r}
+library(seqinr)
+fasta_assembly <- read.fasta("outputs/flye_output/assembly.fasta")
+df <- data.frame(fasta_assembly)
+
+
+```
+
+Based on the results we'd expect to ... and we'd say that the coverage was ...
+
+Assignment question 2.
+
+The BUSCO scores were ...
+
+The N50 was ...
+
+The total assembly length was ...
+
+Assignment question 3.
+
+The genome fraction was ...
+
+The duplication ratio was ...
+
+The level of misassemblies was ...
+
+Assignment question 4.
+
+```{r}
+
+
+
+```

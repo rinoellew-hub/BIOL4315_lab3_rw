@@ -1,0 +1,84 @@
+---
+title: "03-lab3"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Assignment question 1.
+
+```{r}
+library(knitr)
+
+flye_assembly <- read_lines("outputs/flye_output/flye.log")
+
+```
+
+Based on the results we'd expect to ... and we'd say that the coverage was ...
+
+Assignment question 2. 
+- The BUSCO scores were 42.9% complete, 0.6% fragmented and 56.5% missing. The coverage given was not good as more than half the of genes were missing. - N50 was 28 Kbp.
+- The total assembly length was 10055917 bp.
+
+Assignment question 3. 
+- The genome fraction compared to BUSCO was 4.733, which gave us a lesser percentage than the results in BUSCO. 
+- Duplication ratio was 1.029 
+- The level of misassemblies on the report was an output of 1 misassembled contig and the length was 18084. This tells us that the reference genome represents the genomic diversity really well for this species, as we only got a single misassembled contig.
+
+Assignment question 4.
+
+```{r}
+samtools faidx data/S288C_UCSC.fna chrI > outputs/R64_chr1.fna
+```
+
+Assignment question 5. 
+- We have 10 contigs aligned to chromosome 1. 
+- By using range() and ranges() the length of chromosome 1 was 147212 and the sum of the contigs was 17070, so we'd estimate that 11.60% of the chromosome is covered by contigs.
+
+Assignment question 6.
+
+```{r}
+sequences <- readDNAStringSet("outputs/medaka_round2/consensus.fasta")
+
+longest_seq <- which.max(width(sequences))
+
+longest_seq_true <- sequences[longest_seq]
+
+writeXStringSet(longest_seq_true, filepath = "outputs/longest_contig.fasta")
+```
+
+Assignment question 7.
+
+```{r}
+samtools view -bS outputs/cds_aln.sam > outputs/cds_aln.bam
+  
+samtools sort outputs/cds_aln.bam -o outputs/cds_aln.sorted.bam
+
+samtools index outputs/cds_aln.sorted.bam
+```
+
+Assignment question 8.
+
+```{r}
+bam_file <- "outputs/cds_aln.sorted.bam"
+
+bam <- BamFile(bam_file)
+
+alns <- readGAlignments(bam)
+
+gr_alns <- granges(alns)
+
+aln_track <- AnnotationTrack(gr_alns, name = "Contigs", genome = "sacCer3")
+
+axis_track <- GenomeAxisTrack()
+
+pdf("cds_aln_contigs.pdf", width = 10, height = 7)
+
+plotTracks(list(axis_track, aln_track),
+           from = min(start(gr_alns)),
+           to = max(end(gr_alns)),
+           main = "Contig Alignments to Chromosome 1")
+dev.off()
+
+```
